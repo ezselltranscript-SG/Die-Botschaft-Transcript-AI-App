@@ -1,31 +1,30 @@
-# Etapa 1: Construcción del frontend
+# Etapa 1: Build del frontend
 FROM node:18 AS frontend
 
 WORKDIR /app
-
-# Copia los archivos necesarios del frontend (que están en raíz y src/)
-COPY package*.json ./
+COPY package.json ./
+COPY public ./public
 COPY src ./src
 
 RUN npm install
 RUN npm run build
 
-# Etapa 2: Backend con FastAPI
-FROM python:3.9
+# Etapa 2: Backend con FastAPI + servir frontend
+FROM python:3.10-slim
 
-RUN useradd -m -u 1000 user
-USER user
-
-ENV PATH="/home/user/.local/bin:$PATH"
 WORKDIR /app
 
-COPY --chown=user requirements.txt main.py ./
-COPY --chown=user app ./app
-COPY --from=frontend --chown=user /app/dist ./frontend
-
+# Copiar requerimientos y frontend compilado
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]
+COPY app ./app
+COPY main.py .
+COPY --from=frontend /app/build ./frontend
 
+# Servir todo con Uvicorn + permitir servir frontend
+RUN pip install fastapi uvicorn python-multipart aiofiles
 
+EXPOSE 8000
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 
