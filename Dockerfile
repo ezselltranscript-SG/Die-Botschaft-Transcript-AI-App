@@ -1,30 +1,31 @@
-# Etapa 1: Construcción del frontend
+# Etapa 1: Construir el frontend
 FROM node:18 AS frontend
-WORKDIR /app/frontend
-COPY frontend/ .
-RUN npm install && npm run build
+WORKDIR /app
+COPY src/ ./src
+COPY src/package*.json ./
+RUN npm install
+RUN npm run build
 
-# Etapa 2: Backend + frontend como estáticos
-FROM python:3.10-slim
-
-# Crear directorio de trabajo
+# Etapa 2: Backend + frontend estático
+FROM python:3.9-slim
 WORKDIR /app
 
-# Copiar backend y requerimientos
-COPY app/ ./app
-COPY app/requirements.txt .
+# Crear usuario no root (opcional)
+RUN useradd -m user
+USER user
 
-# Instalar dependencias de Python
+# Copiar el backend
+COPY --chown=user requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+COPY --chown=user main.py .
+COPY --chown=user app/ ./app
 
-# Copiar frontend build generado en la etapa 1
-COPY --from=frontend /app/frontend/build ./frontend_build
+# Copiar el frontend construido
+COPY --chown=user --from=frontend /app/build ./static
 
-# Instalar servidor para archivos estáticos
-RUN pip install uvicorn serve
+# Exponer el puerto
+EXPOSE 8000
 
-# Exponer el puerto por donde responderá Hugging Face
-EXPOSE 7860
+# Correr el backend
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 
-# Comando para servir frontend y backend
-CMD ["sh", "-c", "serve -s ./frontend_build -l 3000 & uvicorn app.main:app --host 0.0.0.0 --port 7860"]
