@@ -1,36 +1,33 @@
-# Etapa 1: Construir el frontend (React)
+# Etapa 1: Construcción del frontend (React, Vite, etc.)
 FROM node:18 AS frontend
+
 WORKDIR /app
-COPY src/package*.json ./src/
+COPY package.json ./
+COPY package-lock.json ./  # solo si usas npm y tienes este archivo
 COPY src ./src
-WORKDIR /app/src
+
 RUN npm install
 RUN npm run build
 
-# Etapa 2: Backend + frontend estático
-FROM python:3.9-slim
+# Etapa 2: Backend (FastAPI)
+FROM python:3.9
 
-# Crear directorio de trabajo
-WORKDIR /app
-
-# Crear usuario no root (opcional pero recomendado)
-RUN useradd -m user
+# Crear usuario sin privilegios
+RUN useradd -m -u 1000 user
 USER user
 
-# Copiar archivos de backend
-COPY --chown=user requirements.txt .
+ENV PATH="/home/user/.local/bin:$PATH"
+WORKDIR /app
+
+# Copiamos backend y frontend ya construido
+COPY --chown=user requirements.txt main.py ./  
+COPY --chown=user app ./app
+COPY --from=frontend --chown=user /app/dist ./frontend  # resultado del build de React/Vite
+
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY --chown=user main.py .
-COPY --chown=user app/ ./app
+# Ejecutar el backend
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]
 
-# Copiar frontend ya compilado
-COPY --chown=user --from=frontend /app/src/build ./static
-
-# Exponer el puerto de FastAPI
-EXPOSE 8000
-
-# Comando para ejecutar FastAPI
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 
 
