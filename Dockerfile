@@ -4,17 +4,17 @@ FROM node:18-alpine as frontend
 WORKDIR /app
 
 # Copiar solo los archivos necesarios para instalar dependencias
-COPY frontend/package*.json ./
+COPY src/package*.json ./
 
 RUN npm install
 
 # Copiar todo el código fuente del frontend
-COPY frontend/ .
+COPY src/ .
 
-# Debug: Verifica que App.tsx esté en src
+# Verificamos que App.tsx exista en src/
 RUN ls -la /app/src
 
-# Construir la aplicación React
+# Construimos la app
 RUN npm run build
 
 # Etapa 2: Backend con Python + servir frontend
@@ -28,21 +28,20 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copiar dependencias del backend
-COPY backend/requirements.txt .
+COPY app/requirements.txt .
 
 # Instalar dependencias de Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar código backend
-COPY backend/ .
+# Copiar el código del backend
+COPY app/ .
 
-# Copiar build del frontend
+# Copiar la build del frontend
 COPY --from=frontend /app/build ./frontend
 
-# Exponer el puerto del backend
+# Exponer el puerto
 EXPOSE 8000
 
-# Comando para ejecutar la aplicación FastAPI
+# Ejecutar FastAPI
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-
 
