@@ -14,7 +14,6 @@ COPY public/ ./public
 COPY src/ ./src
 COPY tsconfig.json ./
 
-
 # Asegurar dependencias de TypeScript (por si falta alguna)
 RUN npm install --save typescript @types/react @types/react-dom
 
@@ -26,10 +25,11 @@ FROM python:3.10-slim as backend
 
 WORKDIR /app
 
-# Instalar dependencias del sistema
+# Instalar dependencias del sistema, incluyendo poppler-utils
 RUN apt-get update && apt-get install -y \
-    curl && \
-    rm -rf /var/lib/apt/lists/*
+    curl \
+    poppler-utils \
+    && rm -rf /var/lib/apt/lists/*
 
 # Instalar dependencias de Python
 COPY requirements.txt .
@@ -45,5 +45,6 @@ COPY --from=frontend /app/build ./frontend
 EXPOSE 8000
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
 
 
