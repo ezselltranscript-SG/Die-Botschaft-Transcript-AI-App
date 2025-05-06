@@ -24,7 +24,8 @@ app.add_middleware(
     max_age=3600,
 )
 
-app.mount("/", StaticFiles(directory="src", html=True), name="frontend")
+app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
+
 
 
 # Incluir rutas
