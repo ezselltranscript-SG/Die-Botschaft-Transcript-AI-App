@@ -12,6 +12,8 @@ origins = [
     "http://127.0.0.1:8000",
 ]
 
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -21,6 +23,8 @@ app.add_middleware(
     expose_headers=["*"],
     max_age=3600,
 )
+
+app.mount("/", StaticFiles(directory="src", html=True), name="frontend")
 
 # Incluir rutas
 app.include_router(spellcheck.router, prefix="/spellcheck", tags=["spellcheck"])
