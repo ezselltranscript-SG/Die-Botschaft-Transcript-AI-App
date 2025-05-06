@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from app import spellcheck, pdf_to_image, separator, crop_image
 
 app = FastAPI(title="Die_Botschaft_Transcript_AI_APIs")
