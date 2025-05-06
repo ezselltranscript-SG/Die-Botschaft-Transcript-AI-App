@@ -9,9 +9,14 @@ COPY package*.json ./
 # Instalar dependencias del frontend
 RUN npm install
 
-# Copiar el resto del frontend (incluyendo src y public)
-COPY src/ ./src
+# Copiar el resto del frontend
 COPY public/ ./public
+COPY src/ ./src
+COPY tsconfig.json ./
+COPY .env ./
+
+# Asegurar dependencias de TypeScript (por si falta alguna)
+RUN npm install --save typescript @types/react @types/react-dom
 
 # Construir el proyecto
 RUN npm run build
@@ -34,10 +39,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app/ ./app
 COPY main.py .
 
-# Copiar frontend compilado
-COPY --from=frontend /app/dist ./frontend
+# Copiar frontend compilado (desde la carpeta build de React)
+COPY --from=frontend /app/build ./frontend
 
 EXPOSE 8000
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
 
