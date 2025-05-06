@@ -28,11 +28,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <Box sx={{ flexGrow: 1 }}>
       <StyledAppBar position="static">
         <Toolbar>
-          <TitleLink to="/">
-            <Typography variant="h6" component="div">
-              Die Botschaft Transcript AI
-            </Typography>
-          </TitleLink>
+          <Typography variant="h6" component={Link} to="/" sx={{ color: 'white', textDecoration: 'none', flexGrow: 1 }}>
+            Die Botschaft Transcript AI
+          </Typography>
+
           <StyledLink to="/">
             <Button color="inherit">Home</Button>
           </StyledLink>
