@@ -25,7 +25,7 @@ app.add_middleware(
     max_age=3600,
 )
 
-app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
+app.mount("/static", StaticFiles(directory="frontend/static"), name="static")
 
 
 
