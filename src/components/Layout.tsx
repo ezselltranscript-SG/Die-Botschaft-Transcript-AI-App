@@ -22,9 +22,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <Box sx={{ flexGrow: 1 }}>
       <StyledAppBar position="static">
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Die Botschaft Transcript AI
-          </Typography>
+          <TitleLink to="/">
+            <Typography variant="h6" component="div">
+              Die Botschaft Transcript AI
+            </Typography>
+          </TitleLink>
           <StyledLink to="/">
             <Button color="inherit">Home</Button>
           </StyledLink>
