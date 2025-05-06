@@ -24,6 +24,7 @@ app.add_middleware(
 
 app.mount("/", StaticFiles(directory="src", html=True), name="frontend")
 
+
 # Incluir rutas
 app.include_router(spellcheck.router, prefix="/spellcheck", tags=["spellcheck"])
 app.include_router(pdf_to_image.router, prefix="/pdf-to-image")
