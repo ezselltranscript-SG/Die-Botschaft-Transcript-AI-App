@@ -13,6 +13,12 @@ const StyledLink = styled(Link)(({ theme }) => ({
   marginLeft: theme.spacing(2),
 }));
 
+const TitleLink = styled(Link)(({ theme }) => ({
+  color: 'white',
+  textDecoration: 'none',
+  flexGrow: 1,
+}));
+
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -22,9 +28,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <Box sx={{ flexGrow: 1 }}>
       <StyledAppBar position="static">
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Die Botschaft Transcript AI
-          </Typography>
+          <TitleLink to="/">
+            <Typography variant="h6" component="div">
+              Die Botschaft Transcript AI
+            </Typography>
+          </TitleLink>
           <StyledLink to="/">
             <Button color="inherit">Home</Button>
           </StyledLink>
@@ -49,4 +57,5 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   );
 };
 
-export default Layout; 
+export default Layout;
+
