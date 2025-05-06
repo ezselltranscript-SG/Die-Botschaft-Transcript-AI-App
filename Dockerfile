@@ -13,7 +13,7 @@ RUN npm install
 COPY public/ ./public
 COPY src/ ./src
 COPY tsconfig.json ./
-COPY .env ./
+
 
 # Asegurar dependencias de TypeScript (por si falta alguna)
 RUN npm install --save typescript @types/react @types/react-dom
