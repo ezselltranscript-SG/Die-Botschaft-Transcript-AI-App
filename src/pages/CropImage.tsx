@@ -23,7 +23,7 @@ const CropImage: React.FC = () => {
       if (selectedFile.type.startsWith('image/')) {
         setFile(selectedFile);
       } else {
-        setError('Por favor, selecciona un archivo de imagen');
+        setError('Please select an image file');
         setFile(null);
       }
     }
@@ -48,11 +48,11 @@ const CropImage: React.FC = () => {
         responseType: 'blob',
       });
 
-      // Crear URL para descargar el archivo
+      // Create URL to download the file
       const url = window.URL.createObjectURL(new Blob([response.data]));
       setDownloadUrl(url);
     } catch (err) {
-      setError('Error al procesar la imagen. Por favor, intente nuevamente.');
+      setError('Error processing the image. Please try again.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -62,10 +62,10 @@ const CropImage: React.FC = () => {
   return (
     <Box sx={{ maxWidth: 1200, mx: 'auto', mt: 4 }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        Separador de Imagen
+        Image Separator
       </Typography>
       <Typography variant="body1" paragraph>
-        Sube una imagen y nuestro sistema separará automáticamente el encabezado del cuerpo.
+        Upload an image and our system will automatically separate the header from the body.
       </Typography>
 
       <Paper sx={{ p: 3, mt: 2 }}>
@@ -84,12 +84,12 @@ const CropImage: React.FC = () => {
               startIcon={<CloudUploadIcon />}
               disabled={loading}
             >
-              Seleccionar Imagen
+              Select Image
             </Button>
           </label>
           {file && (
             <Typography variant="body2" sx={{ mt: 1 }}>
-              Archivo seleccionado: {file.name}
+              Selected file: {file.name}
             </Typography>
           )}
           <Button
@@ -99,7 +99,7 @@ const CropImage: React.FC = () => {
             disabled={loading || !file}
             sx={{ mt: 2, ml: 2 }}
           >
-            {loading ? <CircularProgress size={24} /> : 'Procesar Imagen'}
+            {loading ? <CircularProgress size={24} /> : 'Process Image'}
           </Button>
         </form>
 
@@ -112,15 +112,15 @@ const CropImage: React.FC = () => {
         {downloadUrl && (
           <Box sx={{ mt: 3 }}>
             <Alert severity="success" sx={{ mb: 2 }}>
-              Imagen procesada exitosamente
+              Image processed successfully
             </Alert>
             <Button
               variant="contained"
               color="primary"
               href={downloadUrl}
-              download={`${file?.name.replace(/\.[^/.]+$/, '')}_separada.zip`}
+              download={`${file?.name.replace(/\.[^/.]+$/, '')}_separated.zip`}
             >
-              Descargar Imágenes Separadas
+              Download Separated Images
             </Button>
           </Box>
         )}
@@ -129,4 +129,4 @@ const CropImage: React.FC = () => {
   );
 };
 
-export default CropImage; 
+export default CropImage;
