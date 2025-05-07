@@ -10,7 +10,7 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 const StyledLink = styled(Link)(({ theme }) => ({
   color: 'white',
   textDecoration: 'none',
-  marginLeft: theme.spacing(2),
+  marginLeft: theme.spacing(3),
 }));
 
 const TitleLink = styled(Link)(({ theme }) => ({
